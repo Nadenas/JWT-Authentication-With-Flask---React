@@ -10,11 +10,21 @@ from api.utils import APIException, generate_sitemap
 from api.models import db
 from api.routes import api
 from api.admin import setup_admin
+
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager
+
 #from models import Person
+app = Flask(__name__)
+
+app.config["JWT_SECRET_KEY"] = "mega-secret"  
+jwt = JWTManager(app)
+
 
 ENV = os.getenv("FLASK_ENV")
 static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
-app = Flask(__name__)
+
 app.url_map.strict_slashes = False
 
 # database condiguration
