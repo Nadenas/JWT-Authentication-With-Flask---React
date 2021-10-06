@@ -1,60 +1,67 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.scss";
+import { useHistory } from "react-router-dom";
 
 export const Login = () => {
 	const { store, actions } = useContext(Context);
+	const [email, setEmail] = useState(null);
+	const [password, setPassword] = useState(null);
+	let history = useHistory();
 
-	const login = async (email, password) => {
-		const resp = await fetch(`https://your_api.com/token`, {
+	async function login(event) {
+		event.preventDefault();
+		const response = await fetch("https://3001-sapphire-centipede-m32axcik.ws-eu18.gitpod.io/api/login", {
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ email: email, password: password })
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				email: email,
+				password: password
+			})
 		});
 
-		if (!resp.ok) throw Error("There was a problem in the login request");
+		if (!response.ok) throw Error("There was a problem in the login request");
 
-		if (resp.status === 401) {
+		if (response.status === 401) {
 			throw "Invalid credentials";
-		} else if (resp.status === 400) {
+		} else if (response.status === 400) {
 			throw "Invalid email or password format";
 		}
-		const data = await resp.json();
+		const data = await response.json();
 		// save your token in the localStorage
 		//also you should set your user into the store using the setStore function
 		localStorage.setItem("jwt-token", data.token);
+		actions.setUser_token(data.token);
 
-		return data;
-	};
+		history.push("/protected");
+	}
 
 	return (
-		<div className="text-center mt-5">
-			<form>
+		<div className="container">
+			<h1>Log in</h1>
+			<form onSubmit={login}>
 				<div className="form-group">
-					<label htmlFor="exampleInputEmail1">Email address</label>
 					<input
 						type="email"
 						className="form-control"
-						id="exampleInputEmail1"
-						aria-describedby="emailHelp"
-						placeholder="Enter email"
+						placeholder="email"
+						onChange={event => setEmail(event.target.value)}
+						required
 					/>
-					<small id="emailHelp" className="form-text text-muted">
-						Well never share your email with anyone else.
-					</small>
 				</div>
 				<div className="form-group">
-					<label htmlFor="exampleInputPassword1">Password</label>
-					<input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
-				</div>
-				<div className="form-check">
-					<input type="checkbox" className="form-check-input" id="exampleCheck1" />
-					<label className="form-check-label" htmlFor="exampleCheck1">
-						Check me out
-					</label>
+					<input
+						type="password"
+						className="form-control"
+						placeholder="password"
+						onChange={event => setPassword(event.target.value)}
+						required
+					/>
 				</div>
 				<button type="submit" className="btn btn-primary">
-					Submit
+					Login
 				</button>
 			</form>
 		</div>
