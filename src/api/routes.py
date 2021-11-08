@@ -7,7 +7,7 @@ api = Blueprint('api', __name__)
 
 app = Flask(__name__)
 
-app.config["JWT_SECRET_KEY"] = "super123mega-secret"  # Change this "super secret" with something else!
+app.config["JWT_SECRET_KEY"] = "super12mega-secret"  # Change this "super secret" with something else!
 jwt = JWTManager(app)
 
 @api.route('/hello', methods=['POST', 'GET'])
@@ -25,17 +25,13 @@ def sign_up():
    email = request.json.get("email",None)
    password = request.json.get("password", None)
    is_active = request.json.get("is_active", None)
-   
-   # if email is None or password is None or is_active is None:
-    #    return jsonify({"msg": "Bad username or password"}), 401
-    
+       
    user = User(email = email, password = password, is_active = is_active)
-   #json= request.get_json()
+   json= request.get_json()
 
    db.session.add(user)
    db.session.commit()
        
-
    return jsonify([]), 200
 
     
@@ -50,20 +46,19 @@ def get_users():
 def create_token():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
-    # Query your database for username and password
+   
     user = User.query.filter_by(email=email, password=password).first()
     if user is None:
-        # the user was not found on the database
+      
         return jsonify({"msg": "Bad username or password"}), 401
     
-    # create a new token with the user id inside
     access_token = create_access_token(identity = user.id)
     return jsonify({ "token": access_token, "user_id": user.id })
 
 @api.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
-    # Access the identity of the current user with get_jwt_identity
+    
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
     

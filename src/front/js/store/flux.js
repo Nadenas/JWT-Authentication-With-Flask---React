@@ -14,7 +14,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					initial: "white"
 				}
 			],
-			usertoken: null
+			user_token: null
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -44,7 +44,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ demo: demo });
 			},
 			setUser_token: token => {
-				setStore({ usertoken: token });
+				setStore({ user_token: token });
 			}
 		}
 	};

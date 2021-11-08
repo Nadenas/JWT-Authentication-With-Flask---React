@@ -12,7 +12,7 @@ export const Protected = () => {
 	const protectedData = async () => {
 		// retrieve token form localStorage
 		const token = localStorage.getItem("jwt-token");
-		const response = await fetch(`https://3001-sapphire-centipede-m32axcik.ws-eu18.gitpod.io/api/protected`, {
+		const response = await fetch(process.env.BACKEND_URL + "/api/protected", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const Protected = () => {
 	};
 
 	useEffect(() => {
-		if (store.usertoken === null) history.push("/login");
+		if (store.user_token === null) history.push("/login");
 		else protectedData();
 	}, []);
 
@@ -36,7 +36,7 @@ export const Protected = () => {
 				<img src={rigoImageUrl} />
 			</p>
 			<div className="alert alert-info" />
-			<h1>YOUR PROTECTED DATA HERE</h1>
+			<h1>HI! YOUR PROTECTED DATA HERE</h1>
 		</div>
 	);
 };

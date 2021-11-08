@@ -5,20 +5,20 @@ import { useHistory } from "react-router-dom";
 
 export const Signup = () => {
 	//const { store, actions } = useContext(Context);
-	const [email, setEmail] = useState(" ");
-	const [password, setPassword] = useState(" ");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 	const [confirmPass, setConfirmPass] = useState("");
 	let history = useHistory();
 
 	async function signUp(event) {
 		event.preventDefault();
-		console.log("hasta qui llega");
+
 		if (password !== confirmPass) {
 			alert("Las constraseñas no coinciden");
 			return;
 		}
-
-		const response = await fetch("https://3001-sapphire-centipede-m32axcik.ws-eu18.gitpod.io/api/signup", {
+		console.log("hasta qui llega");
+		const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
